@@ -49,19 +49,12 @@ def get_div_to_latest_pivot(pivot_rows, div, max_backpivots, backcandles_min, ba
     i = len(pivot_rows) - 1
     row_now = pivot_rows.iloc[i]
 
-    k = None
-
-    for j in range(i - 1, -1, -1):
-        row_before = pivot_rows.iloc[j]
-        candle_count = candles_since(row_before.name, row_now.name, timeframe)
-        if candle_count < backcandles_min:
-            continue
-        # first pivot that matches min backcandles
-        k = j
-        break
-
-    if k is None:
+    k = pivot_rows[
+            (row_now.name - pivot_rows.index) / timeframe >= backcandles_min
+        ].index.max()
+    if pd.isnull(k):
         return
+    k = pivot_rows.index.get_loc(k)
 
     for j in range(k,
                    -1 if max_backpivots is None else max(k - max_backpivots - 1, -1),
@@ -69,7 +62,7 @@ def get_div_to_latest_pivot(pivot_rows, div, max_backpivots, backcandles_min, ba
         row_before = pivot_rows.iloc[j]
         candle_count = candles_since(row_before.name, row_now.name, timeframe)
         if candle_count > backcandles_max:
-            break
+            return
         if div.is_div(
                 row_before[div.SRC_OSC], row_now[div.SRC_OSC],
                 row_before[div.SRC_PRICE], row_now[div.SRC_PRICE]):
