@@ -6,6 +6,8 @@ from .custom_indicators.smma import *
 from .custom_indicators.edge_pivot import add_rsi_edge_pivots_low
 from .custom_indicators.divergences import add_divergences
 from .custom_indicators.total_signal import add_total_signal
+from .smma_up_down import add_smma_up_down
+from .rsi import add_rsi
 
 
 class CacheProcessing:
@@ -44,7 +46,9 @@ class CacheProcessing:
 
         add_atr(df=df, atr_idx=self.atr_idx)
 
-        add_rsi(**default_args, rsi_len=self.rsi_len)
+        add_smma_up_down(**default_args, length=self.rsi_len)
+
+        add_rsi(**default_args)
 
         for source, length, target in self.smmas:
             add_smma(**default_args, source=source, length=length, target=target)
