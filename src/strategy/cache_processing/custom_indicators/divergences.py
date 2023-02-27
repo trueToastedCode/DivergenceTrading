@@ -74,18 +74,20 @@ def add_divergences(df, new_data_int_idx, new_data_dt_idx, max_backpivots, backc
     if new_data_int_idx == -1:
         df['BullDiv'] = np.nan
         df['AnotherBearDiv'] = np.nan
-        return
 
     rsi_pivot_low_rows = df[pd.notnull(df.RSIPivotLow)]
     if rsi_pivot_low_rows.empty:
         return
 
-    idx = rsi_pivot_low_rows[
-        rsi_pivot_low_rows.index >= new_data_dt_idx
-    ].index.min()
-    if pd.isnull(idx):
-        return
-    start_i = rsi_pivot_low_rows.index.get_loc(idx)
+    if new_data_int_idx == -1:
+        start_i = 1
+    else:
+        idx = rsi_pivot_low_rows[
+            rsi_pivot_low_rows.index >= new_data_dt_idx
+        ].index.min()
+        if pd.isnull(idx):
+            return
+        start_i = rsi_pivot_low_rows.index.get_loc(idx)
 
     for i in range(start_i, len(rsi_pivot_low_rows)):
         now = rsi_pivot_low_rows.iloc[i].name
