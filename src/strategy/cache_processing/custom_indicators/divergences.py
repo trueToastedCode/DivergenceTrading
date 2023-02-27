@@ -87,14 +87,17 @@ def add_divergences(df, new_data_int_idx, new_data_dt_idx, max_backpivots, backc
     if rsi_pivot_low_rows.empty:
         return
 
-    new_rsi_pivot_low_rows = rsi_pivot_low_rows.iloc[
-        rsi_pivot_low_rows.index >= new_data_dt_idx]
+    idx = rsi_pivot_low_rows[
+        rsi_pivot_low_rows.index >= new_data_dt_idx
+    ].index.min()
+    if pd.isnull(idx):
+        return
+    start_i = rsi_pivot_low_rows.index.get_loc(idx)
 
-    for i in range(len(new_rsi_pivot_low_rows)):
-        now = new_rsi_pivot_low_rows.index[i]
+    for i in range(start_i, len(rsi_pivot_low_rows)):
+        now = rsi_pivot_low_rows.iloc[i].name
 
-        _rsi_pivot_low_rows = rsi_pivot_low_rows[
-            rsi_pivot_low_rows.index <= now]
+        _rsi_pivot_low_rows = rsi_pivot_low_rows.iloc[:i+1]
 
         bull_div = get_div_to_latest_pivot(
             _rsi_pivot_low_rows, BullDiv, max_backpivots, backcandles_min, backcandles_max, timeframe)
