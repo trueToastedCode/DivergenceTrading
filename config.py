@@ -13,7 +13,7 @@ BINANCE_KEY_FILE = 'binance.json'
 CCXT_SYMBOL      = 'BTCUSDT'
 CCXT_SYMBOL_B    = 'USDT'
 
-ATR_IDX   = 7
+ATR_LEN   = 14
 RSI_LEN   = 14
 
 SMMA1_SRC = 'Close'
@@ -57,7 +57,7 @@ class Args:
 
     @staticmethod
     def trading_cache_init():
-        return dict(atr_idx=ATR_IDX,
+        return dict(atr_len=ATR_LEN,
                     rsi_len=RSI_LEN,
                     smmas=[
                         (SMMA1_SRC, SMMA1_LEN, SMMA1_TAR),

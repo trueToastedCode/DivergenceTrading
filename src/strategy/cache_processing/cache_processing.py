@@ -1,18 +1,18 @@
 import time
 import logging
 
-from .technical_indicators import *
 from .custom_indicators.smma import *
 from .custom_indicators.edge_pivot import add_rsi_edge_pivots_low
 from .custom_indicators.divergences import add_divergences
 from .custom_indicators.total_signal import add_total_signal
 from .smma_up_down import add_smma_up_down
 from .rsi import add_rsi
+from .atr import add_atr
 
 
 class CacheProcessing:
     def __init__(self,
-                 atr_idx,
+                 atr_len,
                  rsi_len,
                  smmas,
                  rsi_edge_pivot_n,
@@ -24,7 +24,7 @@ class CacheProcessing:
                  total_long_conflict_smma_confirmation_max_rsi,
                  total_long_stop_rsi,
                  total_long_conflict_stop_rsi):
-        self.atr_idx = atr_idx
+        self.atr_len = atr_len
         self.rsi_len = rsi_len
         self.smmas = smmas
         self.rsi_edge_pivot_n = rsi_edge_pivot_n
@@ -44,7 +44,7 @@ class CacheProcessing:
 
         default_args = dict(df=df, new_data_int_idx=new_data_int_idx, new_data_dt_idx=new_data_dt_idx)
 
-        add_atr(df=df, atr_idx=self.atr_idx)
+        add_atr(**default_args, length=self.atr_len)
 
         add_smma_up_down(**default_args, length=self.rsi_len)
 
