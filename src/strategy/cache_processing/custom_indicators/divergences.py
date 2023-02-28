@@ -96,10 +96,10 @@ def add_divergences(df, new_data_int_idx, new_data_dt_idx, max_backpivots, backc
 
         bull_div = get_div_to_latest_pivot(
             _rsi_pivot_low_rows, BullDiv, max_backpivots, backcandles_min, backcandles_max, timeframe)
-        if bull_div is not None:
+        if bull_div:
             df.loc[now, 'BullDiv'] = bull_div[0]
 
         another_bear_div = get_div_to_latest_pivot(
             _rsi_pivot_low_rows, AnotherBearDiv, max_backpivots, backcandles_min, backcandles_max, timeframe)
-        if another_bear_div is not None:
+        if another_bear_div:
             df.loc[now, 'AnotherBearDiv'] = another_bear_div[0]
