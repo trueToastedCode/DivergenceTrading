@@ -22,7 +22,7 @@ def parse_klines(klines):
     return df
 
 
-class  KlinesClient:
+class KlinesClient:
     @classmethod
     async def create(cls, symbol: str, interval: str):
         self = KlinesClient()
@@ -47,8 +47,8 @@ class  KlinesClient:
                 dt = datetime.utcfromtimestamp(klines[i][0] / 1000)
                 if dt == next_periodic_dt:
                     if i == 0:
-                        # candle not yet closed
-                        break
+                        # no data left
+                        raise ValueError(f'Klines wont\'t contain next periodic dt {next_periodic_dt}')
                     df = parse_klines(klines[:i])
                     len_before = len(df)
                     df = df.dropna()
