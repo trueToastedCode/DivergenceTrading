@@ -170,4 +170,5 @@ keys/binance.json
 
 # Junk
 test.py
+test2.py
 *.csv

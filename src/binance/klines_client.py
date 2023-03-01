@@ -8,14 +8,15 @@ from binance import AsyncClient
 
 # based on: https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
 def parse_klines(klines):
-    data = [[
-        float(kline[1]),
-        float(kline[2]),
-        float(kline[3]),
-        float(kline[4]),
-        float(kline[5]),
-        datetime.utcfromtimestamp(kline[0] / 1000)
-    ] for kline in klines]
+    data = map(
+        lambda kline: (
+             float(kline[1]),
+             float(kline[2]),
+             float(kline[3]),
+             float(kline[4]),
+             float(kline[5]),
+             datetime.utcfromtimestamp(kline[0] / 1000)
+        ), klines)
     df = pd.DataFrame(data, columns=['Open', 'High', 'Low', 'Close', 'Volume', 'Datetime'])
     df.set_index('Datetime', inplace=True)
     return df
