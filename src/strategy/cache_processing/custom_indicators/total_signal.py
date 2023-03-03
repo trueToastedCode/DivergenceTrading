@@ -23,8 +23,7 @@ def add_total_signal(df, new_data_int_idx, new_data_dt_idx,
         if row.RSI >= long_smma_confirmation_min_rsi \
                 and (row.Low <= row.SMMA3
                      or row.SMMA2 <= row.SMMA3
-                     or row.SMMA1 <= row.SMMA2
-                     or row.Open <= row.SMMA3):
+                     or row.SMMA1 <= row.SMMA2):
             # conditions don't match
             continue
         if row.RSI >= long_stop_rsi:
@@ -42,8 +41,7 @@ def add_total_signal(df, new_data_int_idx, new_data_dt_idx,
         if row.RSI <= long_conflict_smma_confirmation_max_rsi \
                 and (row.Low >= row.SMMA3
                      or row.SMMA2 >= row.SMMA3
-                     or row.SMMA1 >= row.SMMA2
-                     or row.Open >= row.SMMA3):
+                     or row.SMMA1 >= row.SMMA2):
             # conditions don't match
             continue
         if row.RSI <= long_conflict_stop_rsi:
