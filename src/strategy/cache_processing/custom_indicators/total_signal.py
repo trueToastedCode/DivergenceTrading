@@ -39,7 +39,7 @@ def add_total_signal(df, new_data_int_idx, new_data_dt_idx,
         # - smma's have to line up under each other
         # - open of current candle has to be below the smma3
         if row.RSI <= long_conflict_smma_confirmation_max_rsi \
-                and (row.Low >= row.SMMA3
+                and (row.High >= row.SMMA3
                      or row.SMMA2 >= row.SMMA3
                      or row.SMMA1 >= row.SMMA2):
             # conditions don't match
