@@ -78,4 +78,4 @@ class Args:
     def create_paper_trading_with_cookie_file():
         dir_path = os.path.dirname(os.path.realpath(__file__))
         cookie_path = os.sep.join([dir_path, 'cookies', COOKIE_FILE])
-        eturn dict(cookie_path=cookie_path, default_symbol=PAPER_SYMBOL)
+        return dict(cookie_path=cookie_path, default_symbol=PAPER_SYMBOL)
