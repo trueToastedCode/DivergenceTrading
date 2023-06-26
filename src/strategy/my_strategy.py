@@ -80,6 +80,7 @@ class MyStrategy:
         except Exception as e:
             logging.error(e)
             return
+        self.last_id = order['id']
 
         logging.info('Open Long ok')
 
