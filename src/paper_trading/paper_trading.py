@@ -14,6 +14,9 @@ class Type(Enum):
 
 
 class PaperTrading:
+    VIEW_HOST = 'https://www.tradingview.com'
+    PAPER_HOST = 'https://papertrading.tradingview.com'
+    
     def __init__(self, cookies, default_symbol):
         self.cookies = cookies
         self.default_symbol = default_symbol
