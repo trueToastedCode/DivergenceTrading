@@ -3,4 +3,4 @@ numpy
 python-binance
 pandas-ta
 periodic-simpletime
-ccxt
+requests

@@ -9,9 +9,9 @@ KLINES_INTERVAL  = '5m'
 PERIOD           = PeriodicSimpleTime(minute=5)
 INIT_TIMEDELTA   = timedelta(days=3)
 CACHE_SIZE       = 500
-BINANCE_KEY_FILE = 'binance.json'
-CCXT_SYMBOL      = 'BTCUSDT'
-CCXT_SYMBOL_B    = 'USDT'
+COOKIE_FILE      = 'papertrading.txt'
+PAPER_SYMBOL     = 'BITSTAMP:BTCUSD'
+MAX_ERROR_COUNT  = 3
 
 ATR_LEN   = 14
 RSI_LEN   = 14
@@ -40,7 +40,7 @@ TOTAL_LONG_STOP_RSI                           = 90
 TOTAL_LONG_CONFLICT_STOP_RSI                  = 10
 
 MIN_BALANCE = 150
-AMOUNT_USE  = 0.2
+AMOUNT_USE  = 0.99
 SLAT_RATIO  = 1.2
 TPSL_RATIO  = 2.71
 
@@ -75,7 +75,7 @@ class Args:
                     total_long_conflict_stop_rsi=TOTAL_LONG_CONFLICT_STOP_RSI)
 
     @staticmethod
-    def create_my_binance_with_key_file():
+    def create_paper_trading_with_cookie_file():
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        key_path = os.sep.join([dir_path, 'keys', BINANCE_KEY_FILE])
-        return dict(key_path=key_path, default_symbol=CCXT_SYMBOL)
+        cookie_path = os.sep.join([dir_path, 'cookies', COOKIE_FILE])
+        eturn dict(cookie_path=cookie_path, default_symbol=PAPER_SYMBOL)

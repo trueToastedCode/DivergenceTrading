@@ -9,7 +9,7 @@ class TradingCache:
     def __init__(self, df, max_size):
         self.max_size = max_size
         self.set_df(df)
-
+    
     def set_df(self, df):
         if len(df) > self.max_size:
             self.df = df.iloc[-self.max_size:]
