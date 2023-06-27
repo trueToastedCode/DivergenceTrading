@@ -72,7 +72,7 @@ class MyStrategy:
         try:
             order = self.paper_trading.place_order(
                 side=Side.BUY,
-                type=Type.MAKET,
+                type=Type.MARKET,
                 quantity=amount,
                 take_profit=take_profit,
                 stop_loss=stop_loss
