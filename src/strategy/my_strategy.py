@@ -64,21 +64,65 @@ class MyStrategy:
         take_profit = df.Close[-1] + self.config.SLAT_RATIO * df.ATR[-1] * self.config.TPSL_RATIO
         take_profit = self.my_binance.exchange.price_to_precision(self.config.CCXT_SYMBOL, take_profit)
 
-        logging.info(f'Open Long [ amount: {amount}, tp: {take_profit}, sl: {stop_loss} ]')
+        logging.info(f'Opening Long [ amount: {amount}, tp: {take_profit}, sl: {stop_loss} ]')
 
         # market order
+        logging.debug(f'Market buy [ amount: {amount} ]')
         try:
-            order = self.my_binance.market_order(amount, 'buy')
+            market_order = self.my_binance.market_order(amount, 'buy')
         except Exception as e:
             logging.error(e)
             return
+        logging.debug(f'Market buy ok')
 
-        time.sleep(1)
+        # wait for order to be filled
+        logging.debug(f'Awaiting order to be filled...')
+        while True:
+            time.sleep(0.5)
+            try:
+                market_order_status = self.my_binance.fetch_order(market_order['info']['orderId'])
+            except Exception as e:
+                logging.error(e)
+                wait_connection()
+                continue
+            status = market_order_status['info']['status'].upper()
+            if status == 'NEW':
+                logging.debug('The order has been accepted by the engine')
+                continue
+            elif status == 'PARTIALLY_FILLED':
+                logging.warning('The order has been partially filled')
+                break
+            elif status == 'FILLED':
+                logging.debug('The order has been completed')
+                break
+            elif status == 'CANCELED':
+                logging.error('The order has been canceled by the user')
+                return
+            elif status == 'PENDING_CANCEL':
+                logging.error('The order is currently unused.')
+                return
+            elif status == 'REJECTED':
+                logging.error('The order was not accepted by the engine and not processed.')
+                return
+            elif status == 'EXPIRED':
+                logging.error('The order was canceled according to the order type\'s rules or by the exchange.')
+                return
+            elif status == 'EXPIRED_IN_MATCH':
+                logging.error('The order was expired by the exchange due to STP.')
+                return
+            else:
+                logging.error(f'Order has unexpected status: {status}')
+                return
+        logging.debug(f'Order filled')
 
         # oco order
-        amount = float(order['amount'])
-        order = self.my_binance.oco_order(amount, 'sell', take_profit, stop_loss, stop_loss)
-        self.last_oco_ids = [item['orderId'] for item in order['orders']]
+        amount = self.my_binance.exchange.amount_to_precision(
+            self.config.CCXT_SYMBOL,
+            float(market_order_status['info']['executedQty'])
+        )
+        logging.debug(f'Making oco order [ amount: {amount}, tp: {take_profit}, sl: {stop_loss} ]')
+        oco_order = self.my_binance.oco_order(amount, 'sell', take_profit, stop_loss, stop_loss)
+        self.last_oco_ids = [item['orderId'] for item in oco_order['orders']]
 
         logging.info('Open Long ok')
 

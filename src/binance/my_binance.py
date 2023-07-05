@@ -70,3 +70,6 @@ class MyBinance:
 
     def cancel_order(self, id, symbol=None):
         return self.exchange.cancel_order(id, symbol or self.default_symbol)
+
+    def fetch_order(self, id, symbol=None):
+        return self.exchange.fetch_order(id, symbol or self.default_symbol)
