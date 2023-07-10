@@ -11,6 +11,7 @@ INIT_TIMEDELTA   = timedelta(days=3)
 CACHE_SIZE       = 500
 BINANCE_KEY_FILE = 'binance.json'
 CCXT_SYMBOL      = 'BTCUSDT'
+CCXT_SYMBOL_A    = 'BTC'
 CCXT_SYMBOL_B    = 'USDT'
 
 ATR_LEN   = 14

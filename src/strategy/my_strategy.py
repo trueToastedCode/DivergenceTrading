@@ -1,5 +1,7 @@
 import logging
 import time
+
+import ccxt.base.errors
 from periodic_simpletime import get_next_periodic_dt
 
 from .cache_processing.cache_processing import CacheProcessing
@@ -121,7 +123,21 @@ class MyStrategy:
             float(market_order_status['info']['executedQty'])
         )
         logging.debug(f'Making oco order [ amount: {amount}, tp: {take_profit}, sl: {stop_loss} ]')
-        oco_order = self.my_binance.oco_order(amount, 'sell', take_profit, stop_loss, stop_loss)
+
+        is_funds_error = False
+        while True:
+            try:
+                oco_order = self.my_binance.oco_order(amount, 'sell', take_profit, stop_loss, stop_loss)
+                break
+            except ccxt.base.errors.InsufficientFunds:
+                if is_funds_error:
+                    raise RuntimeError('Insufficient funds')
+                logging.warning('Insufficient funds, try with with free balance instead of executed quantity again')
+                is_funds_error = True
+                amount = self.my_binance.exchange.amount_to_precision(
+                    self.config.CCXT_SYMBOL,
+                    self.my_binance.get_free_balance(self.config.CCXT_SYMBOL_A)
+                )
         self.last_oco_ids = [item['orderId'] for item in oco_order['orders']]
 
         logging.info('Open Long ok')
